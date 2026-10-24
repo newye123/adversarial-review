@@ -1,0 +1,42 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: py${{ matrix.python }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Run test suite
+        run: python -m unittest discover -s tests -v
+
+      # The gate above is only meaningful if it can go red.
+      # This negative control injects a defect into the good fixture and
+      # asserts the checker rejects it. If this step ever passes while the
+      # fixture is broken, the checker is a no-op.
+      - name: Negative control — the checker must reject a broken report
+        shell: bash
+        run: |
+          set -e
+          cp fixtures/good_report.md /tmp/broken.md
+          sed -i 's/VERDICT: CONCERNS/VERDICT: LGTM/' /tmp/broken.md
+          if python tools/check_report.py /tmp/broken.md; then
+            echo "::error::check_report accepted an invalid VERDICT — the checker is a no-op"
+            exit 1
+          else
+            echo "OK: broken report rejected (rc=$?)"
+          fi
