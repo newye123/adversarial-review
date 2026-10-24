@@ -1,0 +1,5 @@
+# This repo preaches byte-level discipline; keep line endings stable across clones.
+* text=auto eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
