@@ -120,7 +120,7 @@ class TestMutations(unittest.TestCase):
         self.assertIn("E008", codes(t))
 
     def test_e009_incomplete_negative_control(self):
-        t = replace_line(self.good, "  还原：sha256 a1b2c3d4", "")
+        t = replace_line(self.good, "  还原：sha256 7f3a9c21e4b8d056", "")
         self.assertIn("E009", codes(t))
 
     def test_e010_missing_coverage_gap(self):
@@ -134,6 +134,39 @@ class TestMutations(unittest.TestCase):
     def test_e012_clean_with_critical(self):
         t = self.good.replace("VERDICT: CONCERNS", "VERDICT: CLEAN")
         self.assertIn("E012", codes(t))
+
+    def test_e013_placeholder_hash(self):
+        t = self.good.replace("7f3a9c21e4b8d056", "a1b2c3d4")
+        self.assertIn("E013", codes(t))
+
+    def test_e013_accepts_a_long_hash(self):
+        """16 hex chars is indistinguishable from a real reading; 8 is a guess."""
+        self.assertNotIn("E013", codes(self.good))
+
+    def test_clean_does_not_eat_leading_backtick(self):
+        """Regression: stripping every leading backtick broke command detection."""
+        cleaned = check_report._clean('`grep -n x` → rc=1，零命中')
+        self.assertTrue(check_report.BACKTICK_RE.search(cleaned),
+                        f"backtick pair destroyed by _clean: {cleaned!r}")
+
+    def test_e006_not_triggered_when_evidence_starts_with_command(self):
+        """The most common evidence shape must not be flagged as unbacked."""
+        report = "\n".join([
+            "# t", "", "基线：`abc1234`；只读，未跑门。", "", "VERDICT: CONCERNS", "",
+            "## findings", "",
+            "### [NOTE] src/a.ts:1 — 未见防护",
+            "- 问题：破了「回调必须幂等」这条契约。",
+            "- 证据：`grep -rn \"nonce\" src/` → rc=1，零命中。",
+            "- 影响：重放会重复入账。",
+            "- 修复路径：记录已处理 event id。",
+            "- 防回归测试：`tests/a.test.ts` 连发两次，断言只入账一次。",
+            "", "## 负控", "",
+            "- 式一：短路式", "  改动：`src/a.ts:1` 的 x 改成 y", "  基线：rc=0（绿）",
+            "  注入后：rc=1（红）", "  还原：sha256 0123456789abcdef… == 改动前",
+            "  判定：门在拦东西", "",
+            "## 覆盖缺口", "- 未审：运行时行为", "", "## 本次未动什么", "- 未改代码",
+        ])
+        self.assertNotIn("E006", codes(report))
 
     def test_w001_missing_baseline(self):
         t = replace_line(self.good, "基线：`a593f1b`", "")

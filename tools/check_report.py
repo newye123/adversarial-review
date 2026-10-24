@@ -28,6 +28,7 @@ Rule codes:
   E010  no 覆盖缺口 (coverage gap) section
   E011  stress-test section present but no `Survived:` verdict
   E012  VERDICT: CLEAN but CRITICAL findings exist
+  E013  quoted sha256 too short to be a real reading (placeholder hash)
   W101  no 基线 (baseline) declaration
   W102  no "本次未动什么" footer
 """
@@ -76,6 +77,11 @@ EXIT_CODE_RE = re.compile(
     r"(?:\brc\s*=\s*-?\d+|退出码\s*[:：]?\s*-?\d+|\bexit(?:\s*code)?\s*[:=]\s*-?\d+|\brc=)",
     re.IGNORECASE,
 )
+
+# A quoted sha256 must be long enough to be a real reading. 8 hex chars is what
+# people type when they are making one up (`a1b2c3d4`, `deadbeef`).
+SHA_RE = re.compile(r"sha256\s*[：:=]?\s*([0-9a-fA-F]{6,})", re.IGNORECASE)
+SHA_MIN_HEX = 12
 
 NEGATIVE_CLAIM_RE = re.compile(
     r"(没有(?:发现|找到|命中|出现|任何)?|不存在|未发现|未找到|未命中|零命中|0\s*命中|没找到|没出现|"
@@ -127,7 +133,13 @@ class Issue:
 def _clean(s: str) -> str:
     s = s.strip()
     s = re.sub(r"^\*+|\*+$", "", s).strip()
-    s = re.sub(r"^`+|`+$", "", s).strip()
+    # Strip ONE balanced pair of backticks, never every leading one.
+    # Stripping all leading backticks ate the opening quote of an evidence
+    # command (`grep ...` -> grep ...`), so BACKTICK_RE found nothing and E006
+    # fired on perfectly good evidence. Found by running this checker on its
+    # own review report — see docs/self-review-2026-10-24.md.
+    if len(s) >= 2 and s[0] == "`" and s[-1] == "`" and "`" not in s[1:-1]:
+        s = s[1:-1].strip()
     return s
 
 
@@ -212,6 +224,14 @@ def check(text: str, strict: bool = False) -> tuple[list[Issue], dict]:
     for i, ln in enumerate(lines, start=1):
         if NOT_RUN_RE.search(ln) and PASS_RE.search(ln):
             issues.append(Issue("E008", i, "同一行把 NOT RUN 写成了 PASS/通过"))
+
+    # ---- placeholder hashes
+    for m in SHA_RE.finditer(text):
+        if len(m.group(1)) < SHA_MIN_HEX:
+            issues.append(Issue(
+                "E013", text[: m.start()].count("\n") + 1,
+                f"引用的 sha256 只有 {len(m.group(1))} 位十六进制（{m.group(1)}），"
+                f"短到不像真实读数，更像占位符；真实读数至少 {SHA_MIN_HEX} 位"))
 
     # ---- negative control section
     secs = _sections(lines)

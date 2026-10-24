@@ -7,7 +7,15 @@
 
 Most "adversarial review" prompts are prose. They tell the model to be skeptical, then hope it complies. This repo ships the prose *and* two programs that make the discipline checkable: one runs a real negative control against your gate, the other refuses to accept a review report whose claims carry no evidence.
 
-Everything here came out of ~150 real review reports and three months of rework. The case library behind it is not public; the method and the tooling are.
+Everything here came out of three months of real review reports and rework. The case library itself stays private (client work), but three of them are written up in this repo, each with the commands and exit codes that produced its conclusion:
+
+| 案例 | 一句话 | 它证明了什么 |
+|---|---|---|
+| [01 一条测试全绿的护栏，从 HTTP 路径永远到不了](cases/01-guard-that-could-never-fire.md) | 护栏是真的，测试是真的，绿是真的，防护是零 | 门在场 ≠ 门被走到 |
+| [02 一个月后，同一份审查结论自己过期了](cases/02-conclusion-that-expired.md) | 结论有保质期，但没人回去给它贴日期 | 报告必须带基线 SHA 与取证日期 |
+| [03 报告自己声明「未跑任何测试」](cases/03-declaring-what-you-did-not-do.md) | 敢写"这四条没做"的报告，比全绿的报告更可信 | 静态审查必须自报边界 |
+
+这个仓库还包含 [一份对自己的审查](docs/self-review-2026-10-24.md)——用同一套方法写，用同一个工具查。**第一次跑就没过**：两条是检查器自己的 bug（已修，见下），一条是我写漏的。
 
 ---
 
@@ -101,6 +109,24 @@ check_report: report.md
 RESULT: FAIL  (1 error(s), 0 warning(s))
 ```
 
+## 用自己审自己：抓到的两个 bug
+
+[docs/self-review-2026-10-24.md](docs/self-review-2026-10-24.md) 是这个仓库对自己的审查。第一次跑检查器就没过，两条报错：
+
+**Bug 1（工具的）：`_clean()` 把所有开头的反引号都剥掉了。**
+
+证据字段最常见的写法是以命令开头——`` `grep -n ...` → rc=1 ``。剥掉开头那个反引号之后，`BACKTICK_RE` 就配不上对，`has_cmd` 变成 False，于是 `E006` 对完全合规的证据报错。
+
+修法是只剥**一对配平的**反引号，不是剥所有开头的。这个 bug 靠读代码看不出来，靠跑自己才出来。
+
+**Bug 2（示例的）：`fixtures/good_report.md` 里的哈希是编的。**
+
+一个教"证据必须是真的"的仓库，给读者抄的第一个范例用的是 `a1b2c3d4`。
+
+修法是两步：① 示例换成 16 位十六进制；② 新增规则 `E013`——**引用的 sha256 少于 12 位十六进制，判为占位符**。8 位正好是人编数字时的长度。
+
+`E013` 有个已知局限（写进了自审报告的覆盖缺口）：它只查 `sha256` 后面紧跟的串，改个措辞就能绕过。**它是防手滑，不是防造假。**
+
 ## 方法骨架
 
 ```
@@ -139,11 +165,12 @@ python tools/negctl.py --help
 python -m unittest discover -s tests -v
 ```
 
-29 个测试，分三层：
+42 个测试，分四层：
 
 1. **fixture 层**：`fixtures/good_report.md` 必须零问题通过，6 个 `bad_*.md` 各自必须被自己的规则码拒绝。
 2. **mutation 层**：拿合格报告逐条注入单一缺陷，断言对应规则必然触发。**这是检查器自己的负控**——如果某条检测悄悄失效了，第 1 层可能因为别的原因仍然通过，第 2 层会红。
 3. **CLI 层**：真跑子进程，断言退出码。文件不存在必须是 `2`，不能是 `0`。
+4. **cases 层**：每个案例必须有「现象」「结论」「可迁移的判据」，必须够长，README 必须链接到全部案例，**全仓库不许出现客户名与产品型号**。
 
 ## 它明确不做什么
 

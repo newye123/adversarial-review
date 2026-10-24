@@ -21,7 +21,7 @@ VERDICT: CONCERNS
   改动：`src/upload/chunk.ts:64` 的 `await concat(chunks)` 改成 `await concat(chunks.slice(0, 1))`
   基线：rc=0（绿）
   注入后：rc=1（红）
-  还原：sha256 deadbeef… == 改动前
+  还原：sha256 4c81b0e5d9a27f63… == 改动前
   判定：拼接测试在拦东西
 
 ## 覆盖缺口
