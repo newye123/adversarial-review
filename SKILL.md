@@ -3,6 +3,7 @@ name: adversarial-review
 description: 对抗式审查与深挖探查引擎。让"写的人"不能给自己打分，用负控证明门真的拦得住，用 IS/IS-NOT 把问题钻到最深处。Use when user says '对抗式审查', 'adversarial review', '红队', '审一遍', '挑毛病', '找茬', '深挖', '钻到底', '根因', '为什么没反应', '为什么失败', '复盘', '自我审查', '审我刚写的', '这个改动安全吗', '能不能上线', or when an AI has just finished work and needs to verify it actually works rather than looks like it works. 也用于 UI 改完但现象仍在、测试全绿却线上出事、反复返工同一处。
 user_invocable: true
 version: "1.1.0"
+license: NC-1.0 (non-commercial, see LICENSE)
 ---
 
 # adversarial-review: 对抗式审查与深挖探查

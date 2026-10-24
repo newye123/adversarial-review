@@ -1,7 +1,7 @@
 # adversarial-review
 
 [![tests](https://github.com/newye123/adversarial-review/actions/workflows/ci.yml/badge.svg)](https://github.com/newye123/adversarial-review/actions/workflows/ci.yml)
-[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![license: NC-1.0](https://img.shields.io/badge/license-NC--1.0-orange.svg)](LICENSE)
 
 **An adversarial review skill for AI coding agents — with a runnable negative-control harness.**
 
@@ -165,12 +165,15 @@ python tools/negctl.py --help
 python -m unittest discover -s tests -v
 ```
 
-42 个测试，分四层：
+48 个测试，分五层：
 
 1. **fixture 层**：`fixtures/good_report.md` 必须零问题通过，6 个 `bad_*.md` 各自必须被自己的规则码拒绝。
 2. **mutation 层**：拿合格报告逐条注入单一缺陷，断言对应规则必然触发。**这是检查器自己的负控**——如果某条检测悄悄失效了，第 1 层可能因为别的原因仍然通过，第 2 层会红。
 3. **CLI 层**：真跑子进程，断言退出码。文件不存在必须是 `2`，不能是 `0`。
 4. **cases 层**：每个案例必须有「现象」「结论」「可迁移的判据」，必须够长，README 必须链接到全部案例，**全仓库不许出现客户名与产品型号**。
+5. **许可层**：`LICENSE` 不许变回 MIT、必须有 `NOTICE.md`、必须写明不追溯、`SKILL.md` frontmatter 必须声明 `license`。
+   这一层的存在理由是具体的：本仓库曾以 MIT 发布后改为 NC-1.0，**改回去会安静地放走商用授权**，没有别的东西会红。
+   负控实测：把 `LICENSE` 首行改回 `MIT License` → `FAILED (failures=1)` → 还原后 sha256 一致。
 
 ## 它明确不做什么
 
@@ -189,9 +192,9 @@ python -m unittest discover -s tests -v
 **借来的**（已在文中逐处标注）：
 - Clock / Cloud 问题分类、九条认知强制术 — [fullo/claude-adversarial-thinking](https://github.com/fullo/claude-adversarial-thinking)（MIT）
 - Chain-of-Verification、mutation probe、`Survived` 判定的表述 — [fullo/claude-adversarial-skill](https://github.com/fullo/claude-adversarial-skill)（MIT）
-- 加宽版 5 Whys（候选摆开 + 反向验证）— [ase-meta-why](https://github.com/) skill
-- 怀疑清单五模块 — [sidtheone/insightsloop](https://github.com/) skill
-- diff entropy 深度升级 — GitHub `code-review-deep` skill
+- 加宽版 5 Whys（候选摆开 + 反向验证）— `ase-meta-why` skill（**只记名称，出处未核实，故不给链接**）
+- 怀疑清单五模块 — `insightsloop` skill（**同上**）
+- diff entropy 深度升级 — `code-review-deep` skill（**同上**）
 - IS / IS-NOT 四维对比 — Kepner-Tregoe
 - 5 Whys 的反方证据 — BMJ Qual Saf 2017, A.J. Card
 - 全部论文引用见 `SKILL.md`（arXiv 2603.04582 / 2508.12358 / 2608.18167 / 2607.21656）
@@ -206,4 +209,13 @@ python -m unittest discover -s tests -v
 
 ## License
 
-MIT。见 `LICENSE`。
+**非商业使用许可 1.0（NC-1.0）**。见 [LICENSE](LICENSE)，版权与第三方归属见 [NOTICE.md](NOTICE.md)。
+
+- ✅ 可以免费用、改、转、教、在公司内部当质量流程用
+- ❌ **不可以商用**——付费产品、收费交付、以营利为目的的生产流程、技能市场上架收费版本
+- ❌ 不可以移除署名；修改后的分发须沿用同一许可
+- 📌 商用须取得书面授权
+
+准确说法：这是**源码公开（source-available）**，不是 OSI 意义上的开源。开源许可允许商用，这份不允许，请勿称它为「开源项目」。
+
+**许可变更不追溯。** 本仓库 v1.0.0–v1.1.0 曾以 MIT 发布；在该时期取得副本的人，对其副本仍可主张 MIT 的权利。本许可只约束此后取得的版本。若你需要可自由商用的版本，以 MIT 时期的历史提交为准。

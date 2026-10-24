@@ -1,21 +1,82 @@
-MIT License
+# 非商业使用许可 1.0（NC-1.0）
 
-Copyright (c) 2026 yt
+**Non-Commercial Use License 1.0**
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+著作权所有 © 2026 yt (GitHub: [@newye123](https://github.com/newye123))。保留所有权利。
+Copyright © 2026 yt (GitHub: [@newye123](https://github.com/newye123)). All rights reserved.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+---
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+## 一、定义
+
+- **本作品**：本仓库中的全部内容，包括但不限于 `SKILL.md`、`references/`、`cases/`、`tools/`、`tests/`、`README.md` 下的代码、文档、提示词、图表与示例。
+- **商业使用**：以直接或间接获取经济利益为目的的使用。包括但不限于：
+  - 销售、出租、许可、订阅收费；
+  - 用于付费产品或付费服务（含 SaaS、付费课程、付费社群、付费咨询与交付）；
+  - 用于企业内部以营利为目的的生产经营流程；
+  - 用于投放广告、引流变现或以本作品为主要卖点的内容产品；
+  - 将其整体或实质部分并入商业软件、商业 Agent 产品、商业技能市场中的付费技能。
+- **非商业使用**：不以获取经济利益为目的的个人学习、研究、教学、评测、内部试验。
+
+## 二、授权（仅限非商业）
+
+在遵守本许可全部条款的前提下，你可以：
+
+1. **使用**：为非商业目的运行、演示、试用本作品。
+2. **复制与分发**：为非商业目的复制、转载、分发本作品，但必须**完整保留**本许可文件与下述版权声明。
+3. **修改**：为非商业目的修改本作品，但必须：
+   - 在显著位置注明「基于 yt 的 adversarial-review 修改」并附原始仓库链接；
+   - 修改后的作品同样受本许可约束（相同方式共享）。
+4. **教学引用**：在课堂、内部分享、公开演讲中引用，需注明作者与出处链接。
+5. **内部工具化**：允许在公司内部把它当作非营利性的质量流程使用（例如内部代码审查规范）。
+   但若该流程本身是对外收费交付物的一部分，则属于商业使用，需按第四条取得授权。
+
+## 三、禁止
+
+1. **禁止任何形式的商业使用**，无论是否收费、是否直接获利。
+2. **禁止销售**本作品或其衍生作品，包括在技能市场、应用市场、课程平台、知识付费平台上架收费版本。
+3. **禁止移除或篡改**版权声明、作者署名、许可文件与仓库出处链接。
+4. **禁止**将本作品整体或实质部分申请为商标、专利、软件著作权等排他性权利。
+5. **禁止**以本作品为基础训练、微调、蒸馏商业模型或商业 Agent 产品。
+
+## 四、商业授权
+
+如需商业使用，**必须事先取得著作权人的书面授权**。
+
+授权方式：通过 GitHub Issue 或仓库 README 中列明的联系方式提出申请，说明使用场景、范围与期限。未取得书面授权的一切商业使用均属侵权。
+
+## 五、免责声明
+
+本作品按「现状」提供，不附带任何明示或默示的担保，包括但不限于适销性、特定用途适用性与不侵权的担保。因使用本作品而产生的任何直接或间接损失，作者不承担责任。
+
+本作品是方法论与工程实践记录，**不构成法律、财务、安全或合规建议**。读者应自行判断其适用性。
+
+`tools/` 下的程序会修改你指定的文件（负控需要注入破坏再还原）。**请只在版本控制下使用，并自行确认备份。** 作者不对任何数据丢失负责。
+
+## 六、终止
+
+违反本许可任一条款，授权自动终止，你须立即停止使用并删除全部副本。
+
+## 七、其他
+
+- 本许可不授予商标权、肖像权及第三方内容的权利。`references/` 与 README 中引用的第三方项目，其许可归各自作者所有，见 `NOTICE`。
+- 本许可的简体中文版本为权威版本；英文译文仅供参考。
+
+---
+
+## English Summary (for reference only — the Chinese text above is authoritative)
+
+You may use, copy, distribute, and modify this work **for non-commercial purposes only**, provided you keep this license and the copyright notice intact, credit the original author with a link back to this repository, and license any derivative under the same terms.
+
+**Commercial use of any kind is prohibited** without prior written permission from the copyright holder. This includes selling it, bundling it into a paid product or service, using it in for-profit business operations, or using it to train commercial models.
+
+The work is provided "as is", without warranty of any kind. The programs under `tools/` modify files you point them at (that is what a negative control does); use them under version control.
+
+---
+
+## 关于本许可的一个诚实说明
+
+- **这不是一份由律师起草的许可证。** 它是把「禁止商用 + 保留署名」写清楚的最短文本。如果你的场景需要更强的法律确定性，请咨询律师，或改用标准许可证 **PolyForm Noncommercial License 1.0.0**（专为非商业用途设计，国际通用）。
+- **本许可不能追溯撤销已发生的授权。** 本仓库的 v1.0.0–v1.1.0 曾以 **MIT** 发布。任何在该时期取得副本的人，对其已取得的副本仍可主张 MIT 授予的权利（包括商用）。本许可只约束从本次变更起取得的版本。
+  如果你是在找「可以自由商用」的版本，请以 MIT 时期的历史提交为准——那是当时真实授予的权利，本文件不假装能收回它。
+- **本许可不是 OSI 认可的开源许可证。** 「开源」通常指允许商业使用；本作品是**源码公开（source-available）**，不是开源。这个区别请在使用与转述时保持准确。
