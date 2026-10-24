@@ -1,5 +1,8 @@
 # adversarial-review
 
+[![tests](https://github.com/newye123/adversarial-review/actions/workflows/ci.yml/badge.svg)](https://github.com/newye123/adversarial-review/actions/workflows/ci.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 **An adversarial review skill for AI coding agents — with a runnable negative-control harness.**
 
 Most "adversarial review" prompts are prose. They tell the model to be skeptical, then hope it complies. This repo ships the prose *and* two programs that make the discipline checkable: one runs a real negative control against your gate, the other refuses to accept a review report whose claims carry no evidence.
@@ -117,7 +120,7 @@ RESULT: FAIL  (1 error(s), 0 warning(s))
 作为 skill 用（Claude Code / 兼容 Agent Skills 的运行时）：
 
 ```bash
-git clone https://github.com/<you>/adversarial-review.git
+git clone https://github.com/newye123/adversarial-review.git
 ln -s "$PWD/adversarial-review" ~/.claude/skills/adversarial-review
 ```
 
